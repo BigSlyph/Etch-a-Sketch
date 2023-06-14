@@ -1,55 +1,65 @@
-const grid = document.querySelector(".grid");
-const resetButton = document.getElementById("btnReset");
-const eraseButton = document.getElementById("btnErase");
-const rainbowButton = document.getElementById("btnRainbow");
-const limeButton = document.getElementById("btnLime");
-const sizeButton = document.getElementById("btnSetSize");
+const container = document.querySelector(".container");
+const eraser = document.getElementById("eraser");
+const size = document.getElementById("setSize");
+const pink = document.getElementById("pink");
+const reset = document.getElementById("reset");
 
 
-function createGrid(rows, cols) {
-    grid.style.setProperty('--grid-rows', rows);
-    grid.style.setProperty('--grid-cols', cols);
-    for (c = 0; c < (rows * cols); c++) {
-      let cell = document.createElement("div");
-      grid.appendChild(cell).className = "square";
-      
-      cell.addEventListener('mouseover', e => e.target.classList.add('my-color-class'))
-      
-      resetButton.addEventListener('click', () => {
-        console.log ('reset button click');
-        cell.classList.remove('my-color-class')
-      });
 
-      limeButton.addEventListener('click', () => {
-        console.log('lime button click');
-       
+function createGrid(size){
+  container.style.gridTemplateRows = `repeat(${size}, 1fr)`;
+  container.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+
+  for (let i = 0 ; i < (size*size); i++) {
+    let cell = document.createElement("div");
+    cell.style.backgroundColor = "white";
+    cell.style.border = "white solid 0.1px";
+    container.appendChild(cell);
+
+    cell.addEventListener('mouseover', e=> {
+      cell.style.backgroundColor = "pink";
+    })
+
+    eraser.addEventListener('click', e=> {
+      cell.addEventListener('mouseover', e=> {
+        cell.style.backgroundColor = "white";
+      })
+    })
+    pink.addEventListener('click', e=> {
+      cell.addEventListener('mouseover', e=> {
+        cell.style.backgroundColor = "pink";
+      })
+    })
+
+    function resetGrid(){
+      reset.addEventListener('click', e=>{
+        cell.style.backgroundColor = "white";
         
-      });
-      
-      eraseButton.addEventListener('click', () => {
-        console.log('eraser button click')
-      });
+      })
+    }
 
-    };
-
-   
-  };
-
-createGrid(7, 7)
-
-sizeButton.addEventListener('click', () => {
-console.log ('set size click')
-let size = prompt("What size grid?")
-if (size < 70){
-  
-  createGrid(size, size)
+    resetGrid()
+  }
 }
-else {
-  alert ("Must be below 70")
+
+createGrid(16)
+
+
+
+function setSize () {
+  let x = prompt("What size grid? (Up to 100)")
+  container.style.gridTemplateRows = `repeat(${size}, 1fr)`;
+  container.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+  container.innerHTML = '';
+  if (x > 100){
+    alert("Must be 100 or less")
+  } 
+  else {
+    createGrid(x)
+  }
 }
-});
 
 
-
-
-
+size.addEventListener('click', e =>{
+  setSize()
+})
